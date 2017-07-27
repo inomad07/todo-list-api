@@ -15,7 +15,7 @@ mongoose.connect('mongodb://localhost/Tododb', { useMongoClient: false });
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.use('/tasks', apiRoutes);
+app.use('/api/tasks', apiRoutes);
 
 //app.use('/', express.static(path.join(__dirname, '/app')));
 
