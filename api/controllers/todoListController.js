@@ -47,13 +47,18 @@ exports.delete_a_task = (req, res) => {
   }, function(err, task) {
     if (err)
       res.send(err);
-    res.json({ message: 'Task successfully deleted' });
+    res.json({ message: 'Task successfully deleted', task });
   });
 };
 
 exports.change_state = (req, res) => {
     Task.findById(req.params.taskId)
-        .then((task) => Task.findOneAndUpdate(req.params.taskId, { done: !task.done }, {new: true}))
-        .then((task) => res.status(200).json(task))
+        .then((task) => {
+            task.done = !task.done;
+            return task.save();
+        })
+        .then((task) => {
+            return res.status(200).json(task)
+        })
         .catch((err) => res.status(500).json(err));
 };
