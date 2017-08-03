@@ -3,7 +3,7 @@
 const mongoose = require('mongoose'),
   Task = mongoose.model('Tasks');
 
-exports.list_all_tasks = function(req, res) {
+exports.list_all_tasks = (req, res) => {
   Task.find({}, function(err, task) {
     if (err)
       res.send(err);
@@ -12,7 +12,7 @@ exports.list_all_tasks = function(req, res) {
 };
 
 
-exports.create_a_task = function(req, res) {
+exports.create_a_task = (req, res) => {
   console.log(req.body);
   var new_task = new Task(req.body);
   new_task.save(function(err, task) {
@@ -23,7 +23,7 @@ exports.create_a_task = function(req, res) {
 };
 
 
-exports.read_a_task = function(req, res) {
+exports.read_a_task = (req, res) => {
   Task.findById(req.params.taskId, function(err, task) {
     if (err)
       res.send(err);
@@ -32,7 +32,7 @@ exports.read_a_task = function(req, res) {
 };
 
 
-exports.update_a_task = function(req, res) {
+exports.update_a_task = (req, res) => {
   Task.findOneAndUpdate({_id: req.params.taskId}, req.body, {new: true}, function(err, task) {
     if (err)
       res.send(err);
@@ -41,7 +41,7 @@ exports.update_a_task = function(req, res) {
 };
 
 
-exports.delete_a_task = function(req, res) {
+exports.delete_a_task = (req, res) => {
   Task.remove({
     _id: req.params.taskId
   }, function(err, task) {
@@ -49,4 +49,11 @@ exports.delete_a_task = function(req, res) {
       res.send(err);
     res.json({ message: 'Task successfully deleted' });
   });
+};
+
+exports.change_state = (req, res) => {
+    Task.findById(req.params.taskId)
+        .then((task) => Task.findOneAndUpdate(req.params.taskId, { done: !task.done }, {new: true}))
+        .then((task) => res.status(200).json(task))
+        .catch((err) => res.status(500).json(err));
 };
