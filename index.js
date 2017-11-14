@@ -19,7 +19,7 @@ app.use('/api/tasks', apiRoutes);
 
 //app.use('/', express.static(path.join(__dirname, '/app')));
 
-app.use(function(req, res) {
+app.use((req, res) => {
     res.status(404).send({url: req.originalUrl + ' not found'})
 });
 
