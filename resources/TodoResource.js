@@ -7,8 +7,10 @@ class TodoResource {
         console.log('getAll: ', req);
 
         TodoModel.find({}, (err, todo) => {
-            if (err)
+            if (err){
                 res.send(err);
+            }
+
             res.json(todo);
         })
             .then(todos => res.status(200).json(clientResponse.sendSuccessMsg('ok', 'Todo list successfully received', todos)))
@@ -19,8 +21,10 @@ class TodoResource {
     get(req, res) {
         let todoId = req.params.todoId;
         TodoModel.findById(todoId, (err, todo) => {
-            if (err)
+            if (err) {
                 res.send(err);
+            }
+
             res.json(todo);
         })
             .then(todo => res.status(200).json(clientResponse.sendSuccessMsg('ok', 'Todo successfully received', todo)))
@@ -32,8 +36,10 @@ class TodoResource {
         let params = req.body;
         let todoModel = new TodoModel(params);
         todoModel.save( (err, todo) => {
-            if (err)
+            if (err) {
                 res.send(err);
+            }
+
             res.json(todo);
         })
             .then(todo => res.status(200).json(clientResponse.sendSuccessMsg('ok', 'Todo successfully created', todo)))
@@ -42,9 +48,12 @@ class TodoResource {
 
 
     update(req, res) {
-        TodoModel.findOneAndUpdate({_id: req.params.todoId}, req.body, {new: true}, (err, todo) => {
-            if (err)
+        let todoId =  req.params.todoId;
+        TodoModel.findOneAndUpdate({_id: todoId}, req.body, {new: true}, (err, todo) => {
+            if (err) {
                 res.send(err);
+            }
+
             res.json(todo);
         })
             .then(todo => res.status(200).json(clientResponse.sendSuccessMsg('ok', 'Todo successfully updated', todo)))
@@ -52,7 +61,8 @@ class TodoResource {
     }
 
     editTodo() {
-        TodoModel.findById(req.params.todoId)
+        let todoId =  req.params.todoId;
+        TodoModel.findById(todoId)
             .then((todo) => {
                 todo.toggle = !todo.toggle;
                 return todo.save();
@@ -62,11 +72,14 @@ class TodoResource {
     }
 
     delete(req, res) {
+        let todoId =  req.params.todoId;
         TodoModel.remove({
-            _id: req.params.todoId
+            _id: todoId
         }, (err, todo) => {
-            if (err)
+            if (err) {
                 res.send(err);
+            }
+
             res.json(todo);
         })
             .then(todo => res.status(200).json(clientResponse.sendSuccessMsg('ok', 'Todo successfully removed', todo)))
