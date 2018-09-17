@@ -1,8 +1,7 @@
-# backend
+REST API Server
 
 Stack:
 - MongoDB
 - Express.js
-- Vue.js
 - Node.js
 
