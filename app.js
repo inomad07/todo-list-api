@@ -4,6 +4,7 @@ require('dotenv').config();
 const bodyParser = require('body-parser');
 const express = require('express');
 const apiRouter  = require('./routes/api');
+const mongoose = require('mongoose');
 
 //Local imports
 const app = express();
@@ -35,14 +36,14 @@ app.listen(PORT, () => {
     console.log(`started at port ${PORT}`);
 });
 
-const mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
 mongoose.connect(`mongodb://${HOST}/${MONGO_DB}`, {useNewUrlParser: true});
 
 const db = mongoose.connection;
 
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', () => {
-    console.log('MongoDB Connected');
+    console.log('MongoDB Connected!');
 });
 
 

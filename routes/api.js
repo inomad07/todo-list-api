@@ -22,7 +22,9 @@ router.put('/:todoId/changeState', TodoResource.editTodo.bind(TodoResource));
 
 router.delete('/:todoId', TodoResource.delete.bind(TodoResource));
 
-
+router.get('/', function(req, res) {
+    res.send('Hello world');
+});
 
 
 
