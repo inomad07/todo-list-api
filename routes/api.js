@@ -1,10 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const TodoResource = require('../resources/TodoResource');
-const helmet = require('helmet');
 
 // Add headers
-router.use(helmet.referrerPolicy({ policy: 'no-referrer-when-downgrade' }));
 router.use( (req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
