@@ -14,10 +14,8 @@ const MONGO_DB = process.env.MONGO_DB;
 const HOST = process.env.MONGO_HOST;
 
 
-app.use(bodyParser.json());
-app.use(express.static('public'));
 
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use('/api', apiRouter);
