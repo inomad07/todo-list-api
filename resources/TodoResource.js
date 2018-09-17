@@ -1,8 +1,9 @@
 const TodoModel = require('../models/Todo');
 const clientResponse = require('../helpers/SendResponse');
+
 class TodoResource {
 
-    static getAll(req, res) {
+    getAll(req, res) {
         console.log('getAll: ', req);
 
         TodoModel.find({}, (err, todo) => {
@@ -15,17 +16,17 @@ class TodoResource {
     }
 
 
-    static get(req, res) {
+    get(req, res) {
         let todoId = req.params.todoId;
         TodoModel.findById(todoId, (err, todo) => {
             if (err)
                 res.send(err);
             res.json(todo);
         });
-
+        return next();
     }
 
-    static create(req, res) {
+    create(req, res) {
         console.log('create req: ', req.body);
         let params = req.body;
         let todoModel = new TodoModel(params);
@@ -39,7 +40,7 @@ class TodoResource {
     }
 
 
-    static update(req, res) {
+    update(req, res) {
         TodoModel.findOneAndUpdate({_id: req.params.todoId}, req.body, {new: true}, (err, todo) => {
             if (err)
                 res.send(err);
@@ -49,7 +50,7 @@ class TodoResource {
             .catch(err => res.status(500).json(clientResponse.sendErrorMsg(err)));
     }
 
-    static editTodo() {
+    editTodo() {
         TodoModel.findById(req.params.todoId)
             .then((todo) => {
                 todo.toggle = !todo.toggle;
@@ -59,7 +60,7 @@ class TodoResource {
             .catch((err) => res.status(500).json(err));
     }
 
-    static delete(req, res) {
+    delete(req, res) {
         TodoModel.remove({
             _id: req.params.todoId
         }, (err, todo) => {
@@ -74,4 +75,4 @@ class TodoResource {
 
 
 
-module.exports = TodoResource;
+module.exports = new TodoResource();

@@ -9,20 +9,15 @@ const apiRouter  = require('./routes/api');
 const app = express();
 const PORT = process.env.PORT;
 
-
 const MONGO_DB = process.env.MONGO_DB;
 const HOST = process.env.MONGO_HOST;
 
-const mongoose = require('mongoose');
-mongoose.connect(`mongodb://${HOST}/${MONGO_DB}`, {useNewUrlParser: true});
-
-const db = mongoose.connection;
-
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open',  () => {
-    console.log('MongoDB Connected');
+app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "GET,POST,*");
+    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, Content-Length, X-Requested-With");
+    next();
 });
-
 
 app.use(bodyParser.json());
 app.use(express.static('public'));
@@ -38,6 +33,16 @@ app.use((req, res) => {
 
 app.listen(PORT, () => {
     console.log(`started at port ${PORT}`);
+});
+
+const mongoose = require('mongoose');
+mongoose.connect(`mongodb://${HOST}/${MONGO_DB}`, {useNewUrlParser: true});
+
+const db = mongoose.connection;
+
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', () => {
+    console.log('MongoDB Connected');
 });
 
 
