@@ -1,30 +1,44 @@
-const express = require('express'),
-  app = express(),
-  port = process.env.PORT || 3001,
-  mongoose = require('mongoose'),
-  Task = require('./api/models/todoListModel'),
-  apiRoutes = require('./api/routes/todoListRoutes'),
-  bodyParser = require('body-parser'),
-  path = require('path');
+// require('dotenv').config({path: `${__dirname}/.env`});
+require('dotenv').config();
 
-  
-mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost/Tododb', { useMongoClient: false }); 
+const bodyParser = require('body-parser');
+const express = require('express');
+const apiRouter  = require('./routes/api');
+
+//Local imports
+const app = express();
+const PORT = process.env.PORT;
 
 
-app.use(bodyParser.urlencoded({ extended: true }));
+const MONGO_DB = process.env.MONGO_DB;
+const HOST = process.env.MONGO_HOST;
+
+const mongoose = require('mongoose');
+mongoose.connect(`mongodb://${HOST}/${MONGO_DB}`, {useNewUrlParser: true});
+
+const db = mongoose.connection;
+
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open',  () => {
+    console.log('MongoDB Connected');
+});
+
+
+app.use(bodyParser.json());
+app.use(express.static('public'));
+
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
-app.use('/api/tasks', apiRoutes);
-
-//app.use('/', express.static(path.join(__dirname, '/app')));
+app.use('/api', apiRouter);
 
 app.use((req, res) => {
     res.status(404).send({url: req.originalUrl + ' not found'})
 });
 
-
-app.listen(port, () => {
-    console.log(`todo list RESTful API server started on:  ${port}`);
+app.listen(PORT, () => {
+    console.log(`started at port ${PORT}`);
 });
 
+
+exports = module.exports = app;
