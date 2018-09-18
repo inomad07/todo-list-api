@@ -29,8 +29,8 @@ class TodoResource {
             .catch(err => res.status(500).json(clientResponse.sendErrorMsg(err)));
     }
 
-    update(req, res) {
 
+    update(req, res) {
         async function main() {
             let id = req.params.todoId;
             let updatedTodo = req.body;
