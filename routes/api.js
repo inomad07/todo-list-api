@@ -16,7 +16,7 @@ router.get('/:todoId', TodoResource.get.bind(TodoResource));
 router.post('/', TodoResource.create.bind(TodoResource));
 
 router.put('/:todoId', TodoResource.update.bind(TodoResource));
-// router.put('/:todoId/changeState', TodoResource.toggle.bind(TodoResource));
+router.put('/:todoId/toggle', TodoResource.toggle.bind(TodoResource));
 
 router.delete('/:todoId', TodoResource.delete.bind(TodoResource));
 

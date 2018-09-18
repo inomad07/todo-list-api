@@ -52,6 +52,7 @@ class TodoResource {
 
     }
 
+
     delete(req, res) {
         let id = req.params.todoId;
         return TodoModel.deleteOne({_id: id}, (err, todo) => {
