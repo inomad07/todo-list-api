@@ -12,7 +12,6 @@ exports.list_all_tasks = (req, res, next) => {
 
 
 exports.create_a_task = (req, res, next) => {
-  console.log(req.body);
   const new_task = new Task(req.body);
   new_task.save( (err, task) => {
     if (err)
@@ -28,11 +27,12 @@ exports.read_a_task = (req, res, next) => {
     if (err)
       res.send(err);
     res.status(200).json(task);
+    return next();
   });
 };
 
 
-exports.update_a_task = (req, res) => {
+exports.update_a_task = (req, res, next) => {
   Task.findOneAndUpdate({_id: req.params.todoId}, req.body, {new: true}, (err, task) => {
     if (err)
       res.send(err);
@@ -55,13 +55,13 @@ exports.delete_a_task = (req, res, next) => {
 
 
 exports.change_state = (req, res, next) => {
-    Task.findById(req.params.todoId)
-        .then((task) => {
-            task.toggle = !task.toggle;
-            task.save();
-        })
-        .then((task) => {
-          res.status(200).json(task)
-        })
-        .catch((err) => res.status(500).json(err));
+  let id = req.params.todoId;
+  Task.findById(id)
+      .then((task) => {
+        console.log(task);
+        Task.findOneAndUpdate(req.params.todoId, { toggle: !task.toggle }, {new: true})})
+      .then((task) => {
+        res.status(200).json(task);
+        return next();
+      });
 };
