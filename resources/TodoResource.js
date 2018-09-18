@@ -3,78 +3,64 @@ const clientResponse = require('../helpers/SendResponse');
 
 class TodoResource {
 
-    getAll(req, res, next) {
-        console.log('getAll: ', req);
-
-        TodoModel.find({}, (err, todo) => {
-            if (err)
-                res.send(err);
-            res.json(todo);
-            return next();
-        })
-
+    getAll(req, res) {
+        return TodoModel.find({})
+            .then(todo => {
+                res.status(200).json(clientResponse.sendSuccessMsg('ok', 'Todo successfully received', todo));
+            })
+            .catch(err => res.status(500).json(clientResponse.sendErrorMsg(err)));
     }
 
 
-    get(req, res, next) {
-        let todoId = req.params.todoId;
-        TodoModel.findById(todoId, (err, todo) => {
-            if (err)
-                res.send(err);
-            res.json(todo);
-            return next();
-        })
-
-    }
-
-    create(req, res, next) {
-        console.log('create req: ', req.body);
-        let params = req.body;
-        let todoModel = new TodoModel(params);
-        todoModel.save( (err, todo) => {
-            if (err)
-                res.send(err);
-            res.json(todo);
-            return next();
-        })
-
+    get(req, res) {
+        let id = req.params.todoId;
+        return TodoModel.findById(id)
+            .then(todo => res.status(200).json(clientResponse.sendSuccessMsg('ok', 'Todo successfully получены', todo)))
+            .catch(err => res.status(500).json(clientResponse.sendErrorMsg(err)));
     }
 
 
-    update(req, res, next) {
-        let todoId =  req.params.todoId;
-        TodoModel.findOneAndUpdate({_id: todoId}, req.body, {new: true}, (err, todo) => {
-            if (err)
-                res.send(err);
-            res.json(todo);
-            return next();
-        })
+    create(req, res) {
+        let newTodo = new TodoModel();
+        newTodo.text = req.body;
+        newTodo.toggle = false;
+        return newTodo.save()
+            .then(todo => res.json(todo));
     }
 
-    editTodo(req, res, next) {
-        let todoId =  req.params.todoId;
-        TodoModel.findById(todoId)
+
+    update(req, res) {
+        let id = req.params.id;
+        let updatedTodo = req.body;
+        updatedTodo = clientResponse.normalizeObject(updatedTodo);
+        return TodoModel.findOneAndUpdate({_id: id}, {$set: {text: updatedTodo}}, {new: true})
+            .then(updatedOption => res.status(200).json(clientResponse.sendSuccessMsg('ok', 'Опиця успешно обновлена', updatedOption)))
+            .catch(err => res.status(500).json(clientResponse.sendErrorMsg(err)));
+    }
+
+
+    toggle(req, res) {
+        return TodoModel.find({_id: id})
             .then((todo) => {
                 todo.toggle = !todo.toggle;
                 todo.save();
                 res.json(todo);
-                return next();
             })
+            .then(todo => res.status(200).json(clientResponse.sendSuccessMsg('ok', 'Не связанные опции успешно получены', todo)))
+            .catch(err => res.status(500).json(clientResponse.sendErrorMsg(err)));
+
     }
 
-    delete(req, res, next) {
-        let todoId =  req.params.todoId;
-        TodoModel.remove({
-            _id: todoId
-        }, (err, todo) => {
+    delete(req, res) {
+        let id = req.params.todoId;
+        return TodoModel.deleteOne({_id: id}, (err, todo) => {
             if (err)
                 res.send(err);
             res.json(todo);
-            return next();
-        })
+        });
     }
-}
 
+}
 
 
 module.exports = new TodoResource();
