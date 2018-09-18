@@ -6,7 +6,7 @@ class TodoResource {
     getAll(req, res) {
         return TodoModel.find({})
             .then(todo => {
-                res.status(200).json(clientResponse.sendSuccessMsg('ok', 'Todo successfully received', todo));
+                res.status(200).json(clientResponse.sendSuccessMsg('ok', 'Todo list successfully received', todo));
             })
             .catch(err => res.status(500).json(clientResponse.sendErrorMsg(err)));
     }
@@ -15,7 +15,7 @@ class TodoResource {
     get(req, res) {
         let id = req.params.todoId;
         return TodoModel.findById(id)
-            .then(todo => res.status(200).json(clientResponse.sendSuccessMsg('ok', 'Todo successfully получены', todo)))
+            .then(todo => res.status(200).json(clientResponse.sendSuccessMsg('ok', 'Todo successfully received', todo)))
             .catch(err => res.status(500).json(clientResponse.sendErrorMsg(err)));
     }
 
@@ -25,7 +25,8 @@ class TodoResource {
         newTodo.text = req.body;
         newTodo.toggle = false;
         return newTodo.save()
-            .then(todo => res.json(todo));
+            .then(todo => res.status(200).json(clientResponse.sendSuccessMsg('ok', 'Todo successfully created', todo)))
+            .catch(err => res.status(500).json(clientResponse.sendErrorMsg(err)));
     }
 
 
@@ -34,7 +35,7 @@ class TodoResource {
         let updatedTodo = req.body;
         updatedTodo = clientResponse.normalizeObject(updatedTodo);
         return TodoModel.findOneAndUpdate({_id: id}, {$set: {text: updatedTodo}}, {new: true})
-            .then(updatedOption => res.status(200).json(clientResponse.sendSuccessMsg('ok', 'Опиця успешно обновлена', updatedOption)))
+            .then(todo => res.status(200).json(clientResponse.sendSuccessMsg('ok', 'Todo successfully updated', todo)))
             .catch(err => res.status(500).json(clientResponse.sendErrorMsg(err)));
     }
 
@@ -46,7 +47,7 @@ class TodoResource {
                 todo.save();
                 res.json(todo);
             })
-            .then(todo => res.status(200).json(clientResponse.sendSuccessMsg('ok', 'Не связанные опции успешно получены', todo)))
+            .then(todo => res.status(200).json(clientResponse.sendSuccessMsg('ok', 'Todo is toggled', todo)))
             .catch(err => res.status(500).json(clientResponse.sendErrorMsg(err)));
 
     }
