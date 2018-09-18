@@ -4,52 +4,62 @@ const clientResponse = require('../helpers/SendResponse');
 class TodoResource {
 
     getAll(req, res) {
-        return TodoModel.find({})
-            .then(todo => {
-                res.status(200).json(clientResponse.sendSuccessMsg('ok', 'Todo list successfully received', todo));
-            })
-            .catch(err => res.status(500).json(clientResponse.sendErrorMsg(err)));
+        TodoModel.find({}, (err, todo) => {
+            if (err) return res.status(500).json(clientResponse.sendErrorMsg(err));
+            res.status(200).send(todo);
+        });
     }
 
 
     get(req, res) {
-        let id = req.params.todoId;
-        return TodoModel.findById(id)
-            .then(todo => res.status(200).json(clientResponse.sendSuccessMsg('ok', 'Todo successfully received', todo)))
-            .catch(err => res.status(500).json(clientResponse.sendErrorMsg(err)));
+        TodoModel.findById(req.params.id, (err, todo) => {
+            if (err) return res.status(500).json(clientResponse.sendErrorMsg(err));
+            res.status(200).send(todo);
+        });
     }
 
 
     create(req, res) {
-        let newTodo = new TodoModel();
-        newTodo.text = req.body;
-        newTodo.toggle = false;
-        return newTodo.save()
-            .then(todo => res.status(200).json(clientResponse.sendSuccessMsg('ok', 'Todo successfully created', todo)))
+        async function main() {
+            let newTodo = new TodoModel(req.body);
+            let todo = await newTodo.save();
+            if (todo) return res.status(200).json(clientResponse.sendSuccessMsg('ok', 'Todo successfully created', todo))
+        }
+        return main()
             .catch(err => res.status(500).json(clientResponse.sendErrorMsg(err)));
     }
 
-
     update(req, res) {
-        let id = req.params.id;
-        let updatedTodo = req.body;
-        updatedTodo = clientResponse.normalizeObject(updatedTodo);
-        return TodoModel.findOneAndUpdate({_id: id}, {$set: {text: updatedTodo}}, {new: true})
-            .then(todo => res.status(200).json(clientResponse.sendSuccessMsg('ok', 'Todo successfully updated', todo)))
+
+        async function main() {
+            let id = req.params.todoId;
+            let updatedTodo = req.body;
+            updatedTodo = clientResponse.normalizeObject(updatedTodo);
+            return await TodoModel.findOneAndUpdate({_id: id}, {$set: updatedTodo}, {new: true}, (err, todo) => {
+                if (err) {
+                    console.log('Cannot update')
+                }
+                res.status(200).json(clientResponse.sendSuccessMsg('ok', 'Todo successfully updated', todo));
+            });
+        }
+
+        return main()
             .catch(err => res.status(500).json(clientResponse.sendErrorMsg(err)));
     }
 
 
     toggle(req, res) {
-        return TodoModel.find({_id: id})
+        let id = req.params.todoId;
+
+        TodoModel.findById(id)
             .then((todo) => {
                 todo.toggle = !todo.toggle;
-                todo.save();
-                res.json(todo);
+                return todo.save();
             })
-            .then(todo => res.status(200).json(clientResponse.sendSuccessMsg('ok', 'Todo is toggled', todo)))
-            .catch(err => res.status(500).json(clientResponse.sendErrorMsg(err)));
-
+            .then((todo) => {
+                return res.status(200).json(todo)
+            })
+            .catch((err) => res.status(500).json(clientResponse.sendErrorMsg(err)));
     }
 
 
