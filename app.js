@@ -2,8 +2,7 @@ const express = require('express'),
   app = express(),
   port = process.env.PORT || 3001,
   mongoose = require('mongoose'),
-  Task = require('./api/models/todoListModel'),
-  apiRoutes = require('./api/routes/todoListRoutes'),
+  apiRoutes = require('./api/routes/api'),
   bodyParser = require('body-parser'),
   path = require('path');
 
@@ -15,7 +14,7 @@ mongoose.connect('mongodb://localhost/Tododb', { useMongoClient: false });
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.use('/api/', apiRoutes);
+app.use('/api', apiRoutes);
 
 app.use( (req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
