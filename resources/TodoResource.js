@@ -12,7 +12,7 @@ class TodoResource {
 
 
     get(req, res) {
-        TodoModel.findById(req.params.id, (err, todo) => {
+        TodoModel.findById(req.params.todoId, (err, todo) => {
             if (err) return res.status(500).json(clientResponse.sendErrorMsg(err));
             res.status(200).send(todo);
         });
