@@ -4,18 +4,22 @@ const clientResponse = require('../helpers/SendResponse');
 class TodoResource {
 
     getAll(req, res) {
-        TodoModel.find({}, (err, todo) => {
-            if (err) return res.status(500).json(clientResponse.sendErrorMsg(err));
-            res.status(200).send(todo);
-        });
+        async function main() {
+            let todo = await TodoModel.find();
+            if (todo) return res.status(200).send(todo)
+        }
+        return main()
+            .catch(err => res.status(500).json(clientResponse.sendErrorMsg(err)));
     }
 
 
     get(req, res) {
-        TodoModel.findById(req.params.todoId, (err, todo) => {
-            if (err) return res.status(500).json(clientResponse.sendErrorMsg(err));
-            res.status(200).send(todo);
-        });
+        async function main() {
+            let todo = await TodoModel.findById(req.params.todoId);
+            if (todo) return res.status(200).send(todo)
+        }
+        return main()
+            .catch(err => res.status(500).json(clientResponse.sendErrorMsg(err)));
     }
 
 
@@ -35,12 +39,8 @@ class TodoResource {
             let id = req.params.todoId;
             let updatedTodo = req.body;
             updatedTodo = clientResponse.normalizeObject(updatedTodo);
-            return await TodoModel.findOneAndUpdate({_id: id}, {$set: updatedTodo}, {new: true}, (err, todo) => {
-                if (err) {
-                    console.log('Cannot update')
-                }
-                res.status(200).json(clientResponse.sendSuccessMsg('ok', 'Todo successfully updated', todo));
-            });
+            let todo = await TodoModel.findOneAndUpdate({_id: id}, {$set: updatedTodo}, {new: true});
+            if (todo) return res.status(200).json(clientResponse.sendSuccessMsg('ok', 'Todo successfully updated', todo));
         }
 
         return main()
@@ -51,25 +51,31 @@ class TodoResource {
     toggle(req, res) {
         let id = req.params.todoId;
 
-        TodoModel.findById(id)
-            .then((todo) => {
+        async function main() {
+            let todo = await TodoModel.findById(id);
+
+            if (todo) {
                 todo.toggle = !todo.toggle;
-                return todo.save();
-            })
-            .then((todo) => {
+                todo.save();
                 return res.status(200).json(todo)
-            })
-            .catch((err) => res.status(500).json(clientResponse.sendErrorMsg(err)));
+            }
+        }
+
+        return main()
+            .catch(err => res.status(500).json(clientResponse.sendErrorMsg(err)));
     }
 
 
     delete(req, res) {
         let id = req.params.todoId;
-        return TodoModel.deleteOne({_id: id}, (err, todo) => {
-            if (err)
-                res.send(err);
-            res.json(todo);
-        });
+
+        async function main() {
+            let todo = await TodoModel.deleteOne({_id: id});
+            if (todo) return res.status(200).json(todo);
+        }
+
+        return main()
+            .catch(err => res.status(500).json(clientResponse.sendErrorMsg(err)));
     }
 
 }
