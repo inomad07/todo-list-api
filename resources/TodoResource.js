@@ -5,7 +5,7 @@ class TodoResource {
 
     getAll(req, res) {
         async function main() {
-            let todo = await TodoModel.find();
+            let todo = await TodoModel.find({});
             if (todo) return res.status(200).send(todo)
         }
         return main()
