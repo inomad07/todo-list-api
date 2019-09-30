@@ -1,39 +1,27 @@
 {
-  "name": "ola",
+  "name": "todo",
   "version": "1.0.0",
-  "description": "ola",
+  "description": "todo",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
-    "type": "git",
-    "url": "git+ssh://git@gitlab.com/ola.kg/backend.git"
+    "type": "git"
   },
   "keywords": [
-    "ola"
+    "todolist api"
   ],
   "author": "damon",
   "license": "ISC",
-  "bugs": {
-    "url": "https://gitlab.com/ola.kg/backend/issues"
-  },
-  "homepage": "https://gitlab.com/ola.kg/backend#README",
   "dependencies": {
     "body-parser": "^1.18.3",
     "cookie-parser": "^1.4.3",
     "dotenv": "^6.0.0",
-    "exeunt": "^1.1.1",
     "express": "^4.16.3",
-    "express-validator": "^5.3.0",
-    "helmet": "^3.13.0",
-    "http": "0.0.0",
     "mongodb-backup": "^1.6.9",
     "mongodb-restore": "^1.6.2",
     "mongoose": "^5.2.13",
-    "mongoose-relationships": "^0.4.0",
-    "nodemon": "^1.18.4",
-    "path": "^0.12.7",
-    "uuid": "^3.3.2"
+    "nodemon": "^1.18.4"
   }
 }
