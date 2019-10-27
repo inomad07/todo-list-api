@@ -71,7 +71,7 @@ class TodoResource {
 
         async function main() {
             let todo = await TodoModel.deleteOne({_id: id});
-            if (todo) return res.status(200).json(todo);
+            if (todo) return res.status(200).json({msg: "Todo successfully removed", id});
         }
 
         return main()
