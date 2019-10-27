@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const TodoResource = require('../resources/TodoResource');
+const TodoController = require('../controllers/TodoController');
 
 // Add headers
 router.use( (req, res, next) => {
@@ -10,18 +10,18 @@ router.use( (req, res, next) => {
     next();
 });
 
-router.get('/all', TodoResource.getAll.bind(TodoResource));
-router.get('/:todoId', TodoResource.get.bind(TodoResource));
+router.get('/all', TodoController.getAll.bind(TodoController));
+router.get('/:todoId', TodoController.get.bind(TodoController));
 
-router.post('/', TodoResource.create.bind(TodoResource));
+router.post('/', TodoController.create.bind(TodoController));
 
-router.put('/:todoId', TodoResource.update.bind(TodoResource));
-router.put('/:todoId/toggle', TodoResource.toggle.bind(TodoResource));
+router.put('/:todoId', TodoController.update.bind(TodoController));
+router.put('/:todoId/toggle', TodoController.toggle.bind(TodoController));
 
-router.delete('/:todoId', TodoResource.delete.bind(TodoResource));
+router.delete('/:todoId', TodoController.delete.bind(TodoController));
 
-router.get('/', function(req, res) {
-    res.send('Hello world');
+router.get('/', (req, res) => {
+    res.send('Welcome to Todo List API server!')
 });
 
 
