@@ -53,10 +53,10 @@ exports.update = (req, res, next) => {
 
 
 exports.remove = (req, res, next) => {
-    TodoModel.remove({_id: req.params.todoId})
+    const id = req.params.todoId;
+    TodoModel.remove({_id: id})
         .then(todo => {
-            res.status(200).json({msg: 'Todo successfully deleted', todo});
-            return next();
+            if (todo) res.status(200).json({msg: 'Todo successfully deleted', id}); return next();
         })
         .catch(err => {
             res.status(500).json(err);
