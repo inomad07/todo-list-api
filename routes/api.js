@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const controller = require('../controllers/TodoController');
 
-// // Add headers
 router.use( (req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
@@ -10,14 +9,19 @@ router.use( (req, res, next) => {
     next();
 });
 
-router.get('/all', controller.list_all_tasks);
-router.get('/:todoId', controller.read_a_task);
+router.get('/', function(req, res) {
+    res.send('It works!');
+});
 
-router.put('/:todoId', controller.update_a_task);
-router.put('/:todoId/toggle', controller.change_state);
-router.delete('/:todoId', controller.delete_a_task);
+router.get('/all', controller.getAll);
+router.get('/:todoId', controller.get);
 
-router.post('/', controller.create_a_task);
+router.post('/', controller.create);
+
+router.put('/:todoId', controller.update);
+router.put('/:todoId/toggle', controller.toggle);
+
+router.delete('/:todoId', controller.remove);
 
 
 
