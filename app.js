@@ -8,7 +8,7 @@ const apiRoutes = require('./routes/api');
 const port = process.env.PORT || 3001;
 
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost/Tododb', { useMongoClient: true });
+mongoose.connect('mongodb://localhost/Tododb', { useNewUrlParser: true, useUnifiedTopology: true  });
 
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', () => {
