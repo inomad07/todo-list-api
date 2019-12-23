@@ -8,7 +8,7 @@ const apiRoutes = require('./routes/api');
 const port = process.env.PORT || 3001;
 
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost/Tododb', { useNewUrlParser: true, useUnifiedTopology: true  });
+mongoose.connect('mongodb://localhost/Tododb', { useNewUrlParser: true, useUnifiedTopology: true });
 
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', () => {
@@ -32,8 +32,6 @@ app.use((req, res) => {
     res.status(404).send({url: req.originalUrl + ' not found'})
 });
 
-
 app.listen(port, () => {
     console.log(`Server started on localhost:${port}`);
 });
-
