@@ -19,8 +19,8 @@ const getAll = (req, res, next) => {
 const create = (req, res, next) => {
     const newTodo = new TodoModel(req.body);
     newTodo.save()
-        .then(todo => {
-            res.status(200).json({msg: 'Todo list successfully fetched', todo});
+        .then( (todo) => {
+            res.status(200).json({msg: 'Todo successfully created', todo});
             return next();
         })
         .catch(err => {
@@ -43,7 +43,7 @@ const get = (req, res, next) => {
 
 const update = (req, res, next) => {
     TodoModel.findOneAndUpdate({_id: req.params.todoId}, req.body, {new: true})
-        .then(todo => {
+        .then((todo) => {
             res.status(200).json({msg: 'Todo successfully updated', todo});
             return next();
         })
@@ -55,8 +55,8 @@ const update = (req, res, next) => {
 
 const remove = (req, res, next) => {
     const id = req.params.todoId;
-    TodoModel.remove({_id: id})
-        .then(todo => {
+    TodoModel.deleteOne({_id: id})
+        .then((todo) => {
             if (todo) res.status(200).json({msg: 'Todo successfully deleted', id});
             return next();
         })
