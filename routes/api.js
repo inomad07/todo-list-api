@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const controller = require('../controllers/TodoController');
+const { getAll, get, update, toggle, remove, create } = require('../controllers/TodoController');
 
 router.use( (req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
@@ -9,20 +9,24 @@ router.use( (req, res, next) => {
     next();
 });
 
-router.get('/', function(req, res) {
+router.get('/', (req, res) => {
     res.send('It works!');
 });
 
-router.get('/all', controller.getAll);
-router.get('/:todoId', controller.get);
 
-router.post('/', controller.create);
+router.get('/all', getAll);
+router.get('/:todoId', get);
 
-router.put('/:todoId', controller.update);
-router.put('/:todoId/toggle', controller.toggle);
+router.post('/', create);
 
-router.delete('/:todoId', controller.remove);
+router.put('/:todoId', update);
+router.put('/:todoId/toggle', toggle);
 
+router.delete('/:todoId', remove);
+
+router.use((req, res) => {
+    res.status(404).send({url: req.originalUrl + ' not found'})
+});
 
 
 module.exports = router;

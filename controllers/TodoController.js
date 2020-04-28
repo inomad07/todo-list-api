@@ -1,10 +1,11 @@
 const TodoModel = require('../models/TodoModel');
 
-exports.getAll = (req, res, next) => {
+const getAll = (req, res, next) => {
     TodoModel.find({})
-        .then(todo => {
+        .then((todo) => {
             if (todo.length === 0) {
-                return res.json({msg:'Not found'})
+                res.status(200).json({msg: 'Not found'});
+                return next();
             }
             res.status(200).json(todo);
             return next();
@@ -15,7 +16,7 @@ exports.getAll = (req, res, next) => {
 };
 
 
-exports.create = (req, res, next) => {
+const create = (req, res, next) => {
     const newTodo = new TodoModel(req.body);
     newTodo.save()
         .then(todo => {
@@ -28,7 +29,7 @@ exports.create = (req, res, next) => {
 };
 
 
-exports.get = (req, res, next) => {
+const get = (req, res, next) => {
     TodoModel.findById(req.params.todoId)
         .then(todo => {
             res.status(200).json(todo);
@@ -40,10 +41,10 @@ exports.get = (req, res, next) => {
 };
 
 
-exports.update = (req, res, next) => {
+const update = (req, res, next) => {
     TodoModel.findOneAndUpdate({_id: req.params.todoId}, req.body, {new: true})
         .then(todo => {
-            res.status(200).json({msg: 'Todo successfully updated',todo});
+            res.status(200).json({msg: 'Todo successfully updated', todo});
             return next();
         })
         .catch(err => {
@@ -52,11 +53,12 @@ exports.update = (req, res, next) => {
 };
 
 
-exports.remove = (req, res, next) => {
+const remove = (req, res, next) => {
     const id = req.params.todoId;
     TodoModel.remove({_id: id})
         .then(todo => {
-            if (todo) res.status(200).json({msg: 'Todo successfully deleted', id}); return next();
+            if (todo) res.status(200).json({msg: 'Todo successfully deleted', id});
+            return next();
         })
         .catch(err => {
             res.status(500).json(err);
@@ -64,7 +66,7 @@ exports.remove = (req, res, next) => {
 };
 
 
-exports.toggle = (req, res, next) => {
+const toggle = (req, res, next) => {
     let id = req.params.todoId;
 
     TodoModel.findById(id)
@@ -77,4 +79,14 @@ exports.toggle = (req, res, next) => {
             return next();
         })
         .catch((err) => res.status(500).json(err));
+};
+
+
+module.exports = {
+    getAll,
+    create,
+    get,
+    update,
+    remove,
+    toggle,
 };
