@@ -1,9 +1,9 @@
-const TodoModel = require('../models/Todo');
+const Todo = require('../models/Todo')
 
 class TodoController {
     getAll(req, res) {
         async function main() {
-            const todo = await TodoModel.find({});
+            const todo = await Todo.getAll()
             if (todo) res.status(200).json({todo, status: 0})
         }
 
@@ -15,7 +15,7 @@ class TodoController {
         const id = req.params.todoId;
 
         async function main() {
-            const todo = await TodoModel.findById(id);
+            const todo = await Todo.get(id);
             if (todo) res.status(200).json({status: 0, todo})
         }
 
@@ -25,9 +25,8 @@ class TodoController {
 
     create(req, res) {
         async function main() {
-            const newTodo = new TodoModel(req.body);
-            const todo = await newTodo.save();
-            if (todo) res.status(200).json({msg: 'Todo successfully created', todo, status: 0})
+            const todo = Todo.create(req.body);
+            if (todo) res.status(200).json({todo, msg: 'Todo successfully created', status: 0})
         }
 
         return main()
@@ -39,8 +38,9 @@ class TodoController {
 
         async function main() {
             const updatedTodo = req.body;
-            const todo = await TodoModel.findOneAndUpdate({_id: id}, {$set: updatedTodo}, {new: true});
-            if (todo) res.status(200).json({msg: 'Todo successfully updated', todo, status: 0});
+            const todo = await Todo.update(id, updatedTodo)
+
+            if (todo) res.status(200).json({todo, msg: 'Todo successfully updated', status: 0})
         }
 
         return main()
@@ -51,13 +51,11 @@ class TodoController {
         const id = req.params.todoId;
 
         async function main() {
-            const todo = await TodoModel.findById(id);
-
-            if (todo) {
-                todo.toggle = !todo.toggle;
-                todo.save();
-                res.status(200).json({msg: 'Todo successfully toggled', todo, status: 0})
+            const todo = await Todo.toggle(id);
+            if(todo.err) {
+                return res.status(400).json(todo)
             }
+            res.status(200).json({todo, msg: 'Todo successfully toggled', status: 0})
         }
 
         return main()
@@ -68,8 +66,8 @@ class TodoController {
         const id = req.params.todoId;
 
         async function main() {
-            const todo = await TodoModel.deleteOne({_id: id});
-            if (todo) res.status(200).json({msg: 'Todo successfully removed', id, status: 0});
+            const todo = await Todo.remove(id)
+            if (todo) res.status(200).json({id, msg: 'Todo successfully removed', status: 0});
         }
 
         return main()
