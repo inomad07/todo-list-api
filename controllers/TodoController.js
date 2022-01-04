@@ -1,79 +1,84 @@
 const Todo = require('../models/Todo')
 
-class TodoController {
-    getAll(req, res) {
-        async function main() {
-            const todo = await Todo.getAll()
-            if (todo) res.status(200).json({todo, status: 0})
-        }
-
-        return main()
-            .catch(err => res.status(500).json(err));
+function getAll(req, res) {
+    async function main() {
+        const todo = await Todo.getAll()
+        if (todo) res.status(200).json({todo, status: 0})
     }
 
-    get(req, res) {
-        const id = req.params.todoId;
+    return main()
+        .catch(err => res.status(500).json(err));
+}
 
-        async function main() {
-            const todo = await Todo.get(id);
-            if (todo) res.status(200).json({status: 0, todo})
-        }
+function get(req, res) {
+    const id = req.params.todoId;
 
-        return main()
-            .catch(err => res.status(500).json(err));
+    async function main() {
+        const todo = await Todo.get(id);
+        if (todo) res.status(200).json({status: 0, todo})
     }
 
-    create(req, res) {
-        async function main() {
-            const todo = Todo.create(req.body);
-            if (todo) res.status(200).json({todo, msg: 'Todo successfully created', status: 0})
-        }
+    return main()
+        .catch(err => res.status(500).json(err));
+}
 
-        return main()
-            .catch(err => res.status(500).json(err));
+function create(req, res) {
+    async function main() {
+        const todo = await Todo.create(req.body);
+        if (todo) res.status(200).json({todo, msg: 'Todo successfully created', status: 0})
     }
 
-    update(req, res) {
-        const id = req.params.todoId;
+    return main()
+        .catch(err => res.status(500).json(err));
+}
 
-        async function main() {
-            const updatedTodo = req.body;
-            const todo = await Todo.update(id, updatedTodo)
+function update(req, res) {
+    const id = req.params.todoId;
 
-            if (todo) res.status(200).json({todo, msg: 'Todo successfully updated', status: 0})
-        }
+    async function main() {
+        const updatedTodo = req.body;
+        const todo = await Todo.update(id, updatedTodo)
 
-        return main()
-            .catch(err => res.status(500).json(err));
+        if (todo) res.status(200).json({todo, msg: 'Todo successfully updated', status: 0})
     }
 
-    toggle(req, res) {
-        const id = req.params.todoId;
+    return main()
+        .catch(err => res.status(500).json(err));
+}
 
-        async function main() {
-            const todo = await Todo.toggle(id);
-            if(todo.err) {
-                return res.status(400).json(todo)
-            }
-            res.status(200).json({todo, msg: 'Todo successfully toggled', status: 0})
+function toggle(req, res) {
+    const id = req.params.todoId;
+
+    async function main() {
+        const todo = await Todo.toggle(id);
+        if(todo.err) {
+            return res.status(400).json(todo)
         }
-
-        return main()
-            .catch(err => res.status(500).json(err));
+        res.status(200).json({todo, msg: 'Todo successfully toggled', status: 0})
     }
 
-    delete(req, res) {
-        const id = req.params.todoId;
+    return main()
+        .catch(err => res.status(500).json(err));
+}
 
-        async function main() {
-            const todo = await Todo.remove(id)
-            if (todo) res.status(200).json({id, msg: 'Todo successfully removed', status: 0});
-        }
+function remove(req, res) {
+    const id = req.params.todoId;
 
-        return main()
-            .catch(err => res.status(500).json(err));
+    async function main() {
+        const todo = await Todo.remove(id)
+        if (todo) res.status(200).json({id, msg: 'Todo successfully removed', status: 0});
     }
+
+    return main()
+        .catch(err => res.status(500).json(err));
 }
 
 
-module.exports = new TodoController();
+module.exports = {
+    getAll,
+    get,
+    create,
+    update,
+    toggle,
+    remove
+};
