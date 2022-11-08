@@ -2,10 +2,10 @@
   "name": "todo-backend",
   "version": "1.0.0",
   "description": "todo",
-  "main": "app.js",
+  "main": "src/app.js",
   "scripts": {
-    "start": "node app.js",
-    "dev": "nodemon app.js",
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
     "test": "jest --config ./jest.config.json",
     "test:watch": "npm run test -- --watch"
   },
