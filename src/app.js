@@ -13,11 +13,11 @@ app.use(express.json());
 app.use('/api', apiRouter);
 
 app.use((req, res) => {
-    res.status(404).send({url: req.originalUrl + ' not found'})
+	res.status(404).send({url: req.originalUrl + ' not found'});
 });
 
 app.listen(port, () => {
-    console.log(`Server started at localhost:${port}`);
+	console.log(`Server started at localhost:${port}`);
 });
 
 exports = module.exports = app;
