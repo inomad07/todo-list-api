@@ -1,17 +1,17 @@
 require('dotenv').config({ path: '../.env' });
 const mongoose = require('mongoose');
 
-const mongoConfig = require('../utils/helper');
+const { getOptionUri, getConnectionUri } = require('../utils/helper');
 const env = process.env.ENV;
 const mongoPwd = process.env.MONGO_PWD;
 const mongoUser = process.env.MONGO_USER;
 
 const pwd = mongoPwd.replace(/@/g, '\\@');
 const userUri = `${mongoUser}:${pwd}`;
-const hostUri = mongoConfig.getConnectionUri();
+const hostUri = getConnectionUri();
 const port = process.env.MONGO_PORT;
 const dbUri = process.env.MONGO_DB;
-const options = mongoConfig.getOptionUri();
+const options = getOptionUri();
 
 let mongoConnectionUri;
 
